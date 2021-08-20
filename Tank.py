@@ -161,7 +161,6 @@ class Enemy(Tank):
         follow_radius = self.in_circle(*playerpos, self.follow_radius)
         fire_radius = self.in_circle(*playerpos, self.fire_radius)
 
-        print(self.collision)
         if follow_radius and not self.collision:
             self.follow_player = True
             self.angle = self._calcAngle(playerpos)

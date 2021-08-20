@@ -23,10 +23,9 @@ def update_spawn_pos():
 
 def main():
 
-    global running
+    global running, max_enemy
 
     time = 0
-    max_enemy = 1
     game_over = False
     score = 0
 
@@ -46,6 +45,7 @@ def main():
 
             elif event.type == pygame.MOUSEBUTTONDOWN and game_over:
                 game_over = False
+                max_enemy = 1
                 score = 0
                 time = 0
 
@@ -58,11 +58,15 @@ def main():
             player.keyEvent(key_press)
             player.mouseEvent(pygame.mouse.get_pos())
 
-            if controller.getEnemyCount() < max_enemy or time + 1 % 100 == 0:
+            if controller.getEnemyCount() < max_enemy or (time + 1) % 8500 == 0:
                 controller.spawnEnemy()
 
-            if controller.getScore() + 1 % 25 == 0:
+            if score < controller.getScore():
+                score = controller.getScore()
+
+            if (score+1) % 25 == 0:
                 max_enemy += 1
+                score += 1
 
             if checkWallCollision(player.getBbox()):
                 player.resetPreviousPos()
@@ -83,9 +87,6 @@ def main():
 
         background.update()
         controller.update()
-
-        for x in controller.spawn_lst:
-            pygame.draw.circle(screen, (255, 150, 255), x, radius=30)
 
         for x in range(controller.getLives()):
             screen.blit(life_image, (50 + ((life_image.get_width() + 10) * x), 10))
@@ -113,46 +114,45 @@ if __name__ == "__main__":
 
     running = True
 
-    bg_speed = 3
+    max_enemy = 1
     lives = 3
 
     life_image = pygame.image.load(assets.LIFE)
 
     controller = Controller(screen, lives=lives)
-    player = pl.Player(assets.PLAYER_TANK, screen, (250, 200), controller=controller, speed=3.5, fire_speed=5,
-                       fire_delay=50, fire_radius=320)
+    player = pl.Player(assets.PLAYER_TANK, screen, (250, 200), controller=controller, speed=2, fire_speed=2,
+                       fire_delay=100, fire_radius=250)
 
     controller.setPlayer(player)
 
-    background = bg.Background(assets.BACKGROUND, screen, (-5, -5), speed=bg_speed)
-
+    background = bg.Background(assets.BACKGROUND, screen, (-5, -5))
     bg_rect = background.getRect()
 
     split = (20, 20)
 
-    backg_wall = bg.BackgroundWall(assets.BACKGROUND_WALL1, screen, bg_rect, (0, 0), speed=bg_speed, split=split)
+    backg_wall = bg.BackgroundWall(assets.BACKGROUND_WALL1, screen, bg_rect, (0, 0), split=split)
     wall_coll1 = backg_wall.getCollisionObject()
 
-    backg_wall2 = bg.BackgroundWall(assets.BACKGROUND_WALL2, screen, bg_rect, speed=bg_speed, split=split)
+    backg_wall2 = bg.BackgroundWall(assets.BACKGROUND_WALL2, screen, bg_rect, split=split)
     rect = backg_wall2.get_rect()
     backg_wall2.setPos(bg_rect.width - rect.width, 0)
     wall_coll2 = backg_wall2.getCollisionObject()
 
-    backg_wall3 = bg.BackgroundWall(assets.BACKGROUND_WALL3, screen, bg_rect, speed=bg_speed, split=split)
+    backg_wall3 = bg.BackgroundWall(assets.BACKGROUND_WALL3, screen, bg_rect, split=split)
     rect = backg_wall3.get_rect()
     backg_wall3.setPos(0, bg_rect.height - rect.height)
     wall_coll3 = backg_wall3.getCollisionObject()
 
-    backg_wall4 = bg.BackgroundWall(assets.BACKGROUND_WALL4, screen, bg_rect, speed=bg_speed, split=split)
+    backg_wall4 = bg.BackgroundWall(assets.BACKGROUND_WALL4, screen, bg_rect, split=split)
     rect = backg_wall4.get_rect()
     backg_wall4.setPos(bg_rect.width - rect.width, bg_rect.height - rect.height)
     wall_coll4 = backg_wall4.getCollisionObject()
 
-    backg_wall5 = bg.BackgroundWall(assets.BACKGROUND_WALL5, screen, bg_rect, speed=bg_speed, split=split)
+    backg_wall5 = bg.BackgroundWall(assets.BACKGROUND_WALL5, screen, bg_rect, split=split)
     backg_wall5.setPos(400, 400)
     wall_coll5 = backg_wall5.getCollisionObject()
 
-    backg_wall6 = bg.BackgroundWall(assets.BACKGROUND_WALL6, screen, bg_rect, speed=bg_speed, split=split)
+    backg_wall6 = bg.BackgroundWall(assets.BACKGROUND_WALL6, screen, bg_rect, split=split)
     backg_wall6.setPos(500, 150)
     wall_coll6 = backg_wall6.getCollisionObject()
 

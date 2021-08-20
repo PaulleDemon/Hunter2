@@ -1,5 +1,3 @@
-import random
-
 import pygame
 from typing import Tuple
 from pycollision import Collision
@@ -18,31 +16,6 @@ class Background:
 
     def update(self):
         self.screen.blit(self.bg_image, (self.bg_x, self.bg_y))
-
-    def keyEvent(self, key_press, playerpos: Tuple[float, float]):
-
-        x, y = playerpos
-
-        screen_rect = self.screen.get_rect()
-        image_rect = self.bg_image.get_rect()
-
-        self.pre_x, self.pre_y = self.bg_x, self.bg_y
-
-        if 150 >= x >= self.bg_x + 150 and key_press[pygame.K_a]:
-            self.previous_x = self.bg_x
-            self.bg_x += self.speed
-
-        if 150 >= y >= self.bg_y + 150 and key_press[pygame.K_w]:
-            self.previous_y = self.bg_y
-            self.bg_y += self.speed
-
-        if screen_rect.width - 350 <= x <= self.bg_x + image_rect.width - 250 and key_press[pygame.K_d]:
-            self.previous_x = self.bg_x
-            self.bg_x -= self.speed
-
-        if screen_rect.height - 350 <= y <= self.bg_y + image_rect.height - 250 and key_press[pygame.K_s]:
-            self.previous_y = self.bg_y
-            self.bg_y -= self.speed
 
     def resetprevPos(self):
         self.pre_x, self.pre_y = self.bg_x, self.bg_y
